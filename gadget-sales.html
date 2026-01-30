@@ -34,9 +34,35 @@
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
+    .back-btn {
+     display: inline-block;
+     margin: 20px 0;
+     padding: 10px 18px;
+     background: #111;
+     color: #fffffff1;
+     text-decoration: none;
+     border-radius: 6px;
+     font-weight: 600;
+     transition: 0.3s;
+    }
+
+.back-btn:hover {
+  background: #444;
+}
+
+/* move inline display rules here */
+.tableauViz {
+  display: none;
+}
+
+/* replace inline border on noscript image */
+.tableauPlaceholder noscript img {
+  border: none;
+}
   </style>
 </head>
 <body>
+<a href="index.html" class="back-btn">⬅ Back to Home</a>
 
 <section>
   <h1>Gadget Sales Dashboard</h1>
@@ -85,12 +111,11 @@
   <noscript>
     <a href="#">
       <img alt="Revenue of Gadgets by Country"
-      src="https://public.tableau.com/static/images/Re/RevenueofGadgetsbyCountryDashboard/Sheet1/1_rss.png"
-      style="border: none" />
+      src="https://public.tableau.com/static/images/Re/RevenueofGadgetsbyCountryDashboard/Sheet1/1_rss.png" />
     </a>
   </noscript>
 
-  <object class="tableauViz" style="display:none;">
+  <object class="tableauViz">
     <param name="host_url" value="https://public.tableau.com/" />
     <param name="embed_code_version" value="3" />
     <param name="site_root" value="" />

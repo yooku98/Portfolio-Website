@@ -628,7 +628,12 @@ function generateReceipt(){
 }
 
 function printReceipt(){
+  const client = document.getElementById('clientName').value.trim() || 'Client';
+  const status = document.getElementById('payStatus').value;
+  const original = document.title;
+  document.title = `${client} — ${status}`;
   window.print();
+  document.title = original;
 }
 
 async function shareReceipt(){

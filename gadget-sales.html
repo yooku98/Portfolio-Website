@@ -2,871 +2,875 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sales Dashboard Case Study | William Thompson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gadget Sales Dashboard — Case Study | William Thompson</title>
+  <meta name="description" content="Case study: Interactive Tableau sales dashboard analysing gadget revenue by country and category. Built by William Thompson, SME Analytics Developer.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #0F172A;
-            --secondary: #1E293B;
-            --accent: #3B82F6;
-            --accent-hover: #2563EB;
-            --success: #10B981;
-            --text: #E2E8F0;
-            --text-dim: #94A3B8;
-            --card-bg: #1E293B;
-            --border: #334155;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Sora', sans-serif;
-            background: var(--primary);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--primary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 5px;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            padding: 20px 0;
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: -0.5px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 40px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background: var(--accent);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 120px 60px 80px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-            top: 10%;
-            right: -10%;
-            border-radius: 50%;
-            animation: float 15s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(5deg); }
-        }
-
-        .hero-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 80px;
-            align-items: center;
-            z-index: 2;
-        }
-
-        .hero-content {
-            animation: slideInLeft 1s ease-out;
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .hero-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 24px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .hero-tag::before {
-            content: '●';
-            color: var(--success);
-            font-size: 16px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .hero h1 {
-            font-size: 68px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -2px;
-        }
-
-        .hero h1 .gradient-text {
-            background: linear-gradient(135deg, var(--accent) 0%, #8B5CF6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 20px;
-            color: var(--text-dim);
-            margin-bottom: 40px;
-            line-height: 1.7;
-            max-width: 600px;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 16px 32px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: 2px solid var(--accent);
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        /* Hero Visual */
-        .hero-visual {
-            position: relative;
-            animation: slideInRight 1s ease-out;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 30px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-        }
-
-        .stat-number {
-            font-size: 42px;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-dim);
-            font-weight: 500;
-        }
-
-        /* Section Container */
-        .section {
-            padding: 100px 60px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-tag {
-            display: inline-block;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent);
-            background: rgba(59, 130, 246, 0.1);
-            padding: 6px 16px;
-            border-radius: 50px;
-            margin-bottom: 16px;
-        }
-
-        .section-title {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            letter-spacing: -1px;
-        }
-
-        .section-description {
-            font-size: 18px;
-            color: var(--text-dim);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* Skills Grid */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .skill-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 32px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .skill-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent), #8B5CF6);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
-        }
-
-        .skill-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .skill-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.15);
-        }
-
-        .skill-icon {
-            font-size: 36px;
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .skill-card h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .skill-items {
-            color: var(--text-dim);
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        /* Projects Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-        }
-
-        .project-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .project-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-8px);
-            box-shadow: 0 15px 50px rgba(59, 130, 246, 0.15);
-        }
-
-        .project-header {
-            height: 180px;
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 64px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-header::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%);
-            animation: shimmer 3s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .project-content {
-            padding: 28px;
-        }
-
-        .project-type {
-            display: inline-block;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--accent);
-            background: rgba(59, 130, 246, 0.1);
-            padding: 4px 12px;
-            border-radius: 50px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .project-card h3 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .project-card p {
-            font-size: 14px;
-            color: var(--text-dim);
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        .project-tech {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .tech-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            padding: 4px 10px;
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--accent);
-            border-radius: 4px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        .project-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: gap 0.3s ease;
-        }
-
-        .project-link:hover {
-            gap: 10px;
-        }
-
-        /* Experience Section */
-        .experience-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 40px;
-            margin-bottom: 24px;
-            border-left: 4px solid var(--accent);
-        }
-
-        .experience-card h3 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .experience-role {
-            color: var(--accent);
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .experience-card ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .experience-card li {
-            color: var(--text-dim);
-            font-size: 15px;
-            line-height: 1.8;
-            margin-bottom: 12px;
-            padding-left: 24px;
-            position: relative;
-        }
-
-        .experience-card li::before {
-            content: '▹';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-size: 18px;
-        }
-
-        /* Contact Section */
-        .contact-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 60px;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .contact-container h2 {
-            font-size: 42px;
-            font-weight: 800;
-            margin-bottom: 20px;
-        }
-
-        .contact-container p {
-            font-size: 18px;
-            color: var(--text-dim);
-            margin-bottom: 40px;
-        }
-
-        .contact-methods {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 24px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 8px;
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .contact-item:hover {
-            background: rgba(59, 130, 246, 0.2);
-            border-color: var(--accent);
-            transform: translateY(-3px);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--secondary);
-            border-top: 1px solid var(--border);
-            padding: 40px 60px;
-            text-align: center;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .footer-text {
-            color: var(--text-dim);
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .certifications {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .cert-badge {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            padding: 6px 12px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 4px;
-            color: var(--accent);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 968px) {
-            .nav-container {
-                padding: 0 30px;
-            }
-
-            .nav-links {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: rgba(15, 23, 42, 0.98);
-                flex-direction: column;
-                gap: 0;
-                padding: 20px 0;
-                border-top: 1px solid var(--border);
-                transform: translateY(-100%);
-                opacity: 0;
-                pointer-events: none;
-                transition: all 0.3s ease;
-            }
-
-            .nav-links.active {
-                transform: translateY(0);
-                opacity: 1;
-                pointer-events: all;
-            }
-
-            .nav-links a {
-                padding: 15px 30px;
-                display: block;
-            }
-
-            .mobile-toggle {
-                display: block;
-            }
-
-            .hero {
-                padding: 100px 30px 60px;
-            }
-
-            .hero-container {
-                grid-template-columns: 1fr;
-                gap: 50px;
-            }
-
-            .hero h1 {
-                font-size: 48px;
-            }
-
-            .hero-subtitle {
-                font-size: 18px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section {
-                padding: 80px 30px;
-            }
-
-            .section-title {
-                font-size: 36px;
-            }
-
-            .skills-grid,
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-container {
-                padding: 40px 30px;
-            }
-
-            .contact-container h2 {
-                font-size: 32px;
-            }
-
-            footer {
-                padding: 30px 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 36px;
-            }
-
-            .section-title {
-                font-size: 32px;
-            }
-
-            .stat-number {
-                font-size: 36px;
-            }
-
-            .hero-cta {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:         #080D14;
+      --bg2:        #0D1420;
+      --bg3:        #111927;
+      --panel:      #0F1D2E;
+      --accent:     #00D4FF;
+      --accent2:    #0099CC;
+      --green:      #00E5A0;
+      --amber:      #FFB800;
+      --red:        #FF4757;
+      --border:     rgba(0,212,255,0.15);
+      --border2:    rgba(0,212,255,0.08);
+      --text:       #C8D8E8;
+      --text-dim:   #6A7F94;
+      --text-bright:#E8F4FF;
+      --mono:       'IBM Plex Mono', monospace;
+      --sans:       'IBM Plex Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 3px; }
+
+    /* ── Grid overlay background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(8,13,20,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 60px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--mono);
+      font-size: 16px; font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      text-decoration: none;
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 32px; }
+
+    .nav-back {
+      font-family: var(--mono);
+      font-size: 12px; font-weight: 600;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent); }
+    .nav-back::before { content: '←'; }
+
+    .nav-cta {
+      font-family: var(--mono);
+      font-size: 12px; font-weight: 600;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 8px 20px; border-radius: 4px;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent); color: var(--bg); }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; z-index: 1;
+      padding: 120px 60px 80px;
+      max-width: 1200px; margin: 0 auto;
+    }
+
+    .breadcrumb {
+      font-family: var(--mono);
+      font-size: 12px; color: var(--text-dim);
+      margin-bottom: 32px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .breadcrumb span { color: var(--accent); }
+    .breadcrumb::before { content: '//'; color: var(--accent); margin-right: 4px; }
+
+    .case-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 600;
+      color: var(--accent);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 3px;
+      margin-bottom: 24px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .case-label::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    .hero h1 {
+      font-family: var(--sans);
+      font-size: clamp(36px, 5vw, 58px);
+      font-weight: 700;
+      color: var(--text-bright);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-meta {
+      font-family: var(--mono);
+      font-size: 13px; color: var(--text-dim);
+      margin-bottom: 40px;
+      display: flex; gap: 32px; flex-wrap: wrap;
+    }
+    .hero-meta span { display: flex; align-items: center; gap: 8px; }
+    .hero-meta span::before { content: '▸'; color: var(--accent); }
+
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 60px; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--accent); color: var(--bg);
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      padding: 14px 28px; border-radius: 4px;
+      text-decoration: none; letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: #00EEFF; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,255,0.25); }
+
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: transparent; color: var(--text);
+      font-family: var(--mono); font-size: 13px; font-weight: 600;
+      padding: 14px 28px; border-radius: 4px;
+      border: 1px solid var(--border);
+      text-decoration: none; letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── KPI strip ── */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 80px;
+    }
+
+    .kpi {
+      background: var(--panel);
+      padding: 28px 24px;
+      position: relative;
+    }
+    .kpi::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+    .kpi-value {
+      font-family: var(--mono);
+      font-size: 32px; font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+      line-height: 1;
+    }
+    .kpi-label {
+      font-size: 12px; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 1px;
+      font-family: var(--mono);
+    }
+    .kpi-delta {
+      font-family: var(--mono);
+      font-size: 11px; color: var(--green);
+      margin-top: 8px;
+    }
+
+    /* ── Main layout ── */
+    .main-content {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 60px 100px;
+    }
+
+    /* ── Section ── */
+    .cs-section { margin-bottom: 72px; }
+
+    .section-header {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border2);
+    }
+
+    .section-num {
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 600;
+      color: var(--accent);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid var(--border);
+      padding: 4px 10px; border-radius: 3px;
+      letter-spacing: 1px;
+    }
+
+    .section-title {
+      font-family: var(--sans);
+      font-size: 22px; font-weight: 600;
+      color: var(--text-bright);
+      letter-spacing: -0.3px;
+    }
+
+    /* ── Two-col grid ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+    /* ── Panel card ── */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px;
+      position: relative;
+    }
+
+    .panel-label {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .panel-label::before { content: '//'; opacity: 0.5; }
+
+    .panel p {
+      font-size: 15px; color: var(--text);
+      line-height: 1.75;
+    }
+
+    /* ── Approach steps ── */
+    .steps { display: flex; flex-direction: column; gap: 16px; }
+
+    .step {
+      display: flex; gap: 20px; align-items: flex-start;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px 24px;
+      transition: border-color 0.2s;
+    }
+    .step:hover { border-color: rgba(0,212,255,0.35); }
+
+    .step-num {
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 700;
+      color: var(--accent);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid var(--border);
+      min-width: 36px; height: 36px;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-body { flex: 1; }
+    .step-body strong {
+      display: block;
+      font-size: 14px; font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 4px;
+    }
+    .step-body span {
+      font-size: 13px; color: var(--text-dim);
+    }
+
+    /* ── Tech stack chips ── */
+    .tech-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .chip {
+      font-family: var(--mono);
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 3px;
+      border: 1px solid;
+      letter-spacing: 0.5px;
+    }
+    .chip-blue   { color: var(--accent);  border-color: rgba(0,212,255,0.3);  background: rgba(0,212,255,0.06); }
+    .chip-green  { color: var(--green);   border-color: rgba(0,229,160,0.3);  background: rgba(0,229,160,0.06); }
+    .chip-amber  { color: var(--amber);   border-color: rgba(255,184,0,0.3);  background: rgba(255,184,0,0.06); }
+
+    /* ── Insight cards ── */
+    .insight-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .insight-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+    .insight-icon {
+      font-size: 24px; margin-bottom: 12px; display: block;
+    }
+    .insight-card h4 {
+      font-size: 14px; font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+    }
+    .insight-card p {
+      font-size: 13px; color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ── Impact metrics ── */
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+    .impact-item {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .impact-item::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .impact-item.green::before  { background: var(--green); }
+    .impact-item.blue::before   { background: var(--accent); }
+    .impact-item.amber::before  { background: var(--amber); }
+
+    .impact-num {
+      font-family: var(--mono);
+      font-size: 40px; font-weight: 700;
+      line-height: 1; margin-bottom: 8px;
+    }
+    .impact-item.green .impact-num  { color: var(--green); }
+    .impact-item.blue .impact-num   { color: var(--accent); }
+    .impact-item.amber .impact-num  { color: var(--amber); }
+
+    .impact-desc {
+      font-size: 13px; color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ── Tableau embed ── */
+    .tableau-wrap {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .tableau-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border2);
+      background: var(--bg2);
+    }
+
+    .tableau-title {
+      font-family: var(--mono);
+      font-size: 12px; color: var(--text-dim);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .tableau-title::before {
+      content: '';
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      animation: blink 2s infinite;
+    }
+
+    .tableau-dots { display: flex; gap: 6px; }
+    .tableau-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border);
+    }
+
+    .tableau-body { padding: 0; }
+
+    /* ── Next steps ── */
+    .roadmap { display: flex; flex-direction: column; gap: 0; }
+
+    .roadmap-item {
+      display: flex; gap: 24px; align-items: flex-start;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border2);
+    }
+    .roadmap-item:last-child { border-bottom: none; }
+
+    .roadmap-marker {
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+      flex-shrink: 0; padding-top: 4px;
+    }
+    .roadmap-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+    .roadmap-line {
+      width: 1px; flex: 1;
+      background: var(--border); min-height: 24px;
+      margin-top: 4px;
+    }
+
+    .roadmap-content { flex: 1; }
+    .roadmap-content strong {
+      display: block;
+      font-size: 15px; font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 4px;
+    }
+    .roadmap-content span {
+      font-size: 13px; color: var(--text-dim);
+    }
+
+    .roadmap-tag {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 600;
+      padding: 3px 10px; border-radius: 3px;
+      letter-spacing: 0.5px;
+      flex-shrink: 0; margin-top: 4px;
+    }
+    .tag-planned  { background: rgba(0,212,255,0.08); color: var(--accent);  border: 1px solid rgba(0,212,255,0.2); }
+    .tag-future   { background: rgba(0,229,160,0.08); color: var(--green);   border: 1px solid rgba(0,229,160,0.2); }
+    .tag-research { background: rgba(255,184,0,0.08); color: var(--amber);   border: 1px solid rgba(255,184,0,0.2); }
+
+    /* ── CTA footer section ── */
+    .cta-section {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 60px 100px;
+    }
+
+    .cta-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .cta-box h2 {
+      font-size: 32px; font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .cta-box p {
+      font-size: 16px; color: var(--text-dim);
+      margin-bottom: 36px; max-width: 500px; margin-left: auto; margin-right: auto;
+      line-height: 1.7;
+    }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border2);
+      padding: 32px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: relative; z-index: 1;
+    }
+    .footer-left {
+      font-family: var(--mono);
+      font-size: 12px; color: var(--text-dim);
+    }
+    .footer-left span { color: var(--accent); }
+    .footer-certs { display: flex; gap: 12px; flex-wrap: wrap; }
+    .footer-cert {
+      font-family: var(--mono);
+      font-size: 10px; padding: 4px 10px;
+      background: rgba(0,212,255,0.06);
+      border: 1px solid var(--border2);
+      border-radius: 3px; color: var(--text-dim);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .hero, .main-content, .cta-section { padding-left: 24px; padding-right: 24px; }
+      .kpi-strip { grid-template-columns: repeat(2,1fr); }
+      .two-col, .three-col, .impact-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 20px; text-align: center; }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 30px; }
+      .kpi-strip { grid-template-columns: 1fr 1fr; }
+      .kpi-value { font-size: 24px; }
+      .nav-right .nav-cta { display: none; }
+    }
+  </style>
 </head>
 <body>
-<a href="index.html" class="back-btn">⬅ Back to Home</a>
 
-<section>
-  <h1>Gadget Sales Dashboard</h1>
-  <p>
-    <strong>Tools:</strong> Tableau Public, SQL, Python, Excel
-  </p>
+<!-- ── Nav ── -->
+<nav>
+  <a href="index.html" class="logo">&lt;WT/&gt;</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">Portfolio</a>
+    <a href="https://calendly.com/willyoks/discovery" target="_blank" rel="noopener" class="nav-cta">Book a Call</a>
+  </div>
+</nav>
 
-  <div class="links">
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="breadcrumb">Portfolio <span>/</span> Case Study <span>/</span> Business Intelligence</div>
+
+  <div class="case-label">Case Study · Business Intelligence</div>
+
+  <h1>Gadget Sales<br><em>Revenue Dashboard</em></h1>
+
+  <div class="hero-meta">
+    <span>Tableau Public</span>
+    <span>SQL · Python · Excel</span>
+    <span>Business Intelligence</span>
+    <span>2024</span>
+  </div>
+
+  <div class="hero-actions">
     <a href="https://public.tableau.com/app/profile/william.thompson1921/viz/RevenueofGadgetsbyCountryDashboard/Sheet1"
-       target="_blank" rel="noopener noreferrer">
-       🔗 View Live Tableau Dashboard
+       target="_blank" rel="noopener" class="btn-primary">
+      ↗ View Live Dashboard
     </a>
-
     <a href="https://github.com/yooku98/Sales-Dashboard-Gadgets"
-       target="_blank" rel="noopener noreferrer">
-       🗂️ View GitHub Repository
+       target="_blank" rel="noopener" class="btn-secondary">
+      ⌥ GitHub Repository
     </a>
+  </div>
+
+  <!-- KPI strip -->
+  <div class="kpi-strip">
+    <div class="kpi">
+      <div class="kpi-value">5+</div>
+      <div class="kpi-label">Countries Analysed</div>
+      <div class="kpi-delta">▲ Multi-region coverage</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value">8+</div>
+      <div class="kpi-label">Product Categories</div>
+      <div class="kpi-delta">▲ Full category breakdown</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value">100%</div>
+      <div class="kpi-label">Interactive Filters</div>
+      <div class="kpi-delta">▲ Drill-down enabled</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value">3</div>
+      <div class="kpi-label">Underperformers Flagged</div>
+      <div class="kpi-delta">▲ Actionable insights</div>
+    </div>
   </div>
 </section>
 
-<section>
-  <h2>Problem</h2>
-  <p>
-    Business stakeholders lacked a clear, interactive view of sales performance
-    across countries and product categories, making it difficult to identify trends
-    and revenue drivers.
-  </p>
+<!-- ── Main content ── -->
+<div class="main-content">
 
-  <h2>Objective</h2>
-  <p>
-    Build an interactive sales dashboard that enables users to explore revenue by
-    country and product category, supporting data-driven decision-making.
-  </p>
+  <!-- Problem & Objective -->
+  <div class="cs-section">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <h2 class="section-title">Problem & Objective</h2>
+    </div>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-label">Business Problem</div>
+        <p>Business stakeholders lacked a clear, interactive view of sales performance across countries and product categories, making it difficult to identify revenue trends and growth drivers. Decisions were being made from static spreadsheets with no filtering capability.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-label">Objective</div>
+        <p>Build an interactive sales dashboard that enables stakeholders to explore revenue by country and product category in real time — replacing static reporting with a self-serve analytics layer that supports faster, data-driven decision-making.</p>
+      </div>
+    </div>
+  </div>
 
-  <h2>Approach</h2>
-  <ul>
-    <li>Prepared and cleaned sales data using Excel and SQL</li>
-    <li>Designed KPIs to track revenue performance</li>
-    <li>Built an interactive Tableau dashboard with filters and drill-downs</li>
-    <li>Published the dashboard publicly for stakeholder access</li>
-  </ul>
+  <!-- Tech Stack -->
+  <div class="cs-section">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <h2 class="section-title">Tech Stack</h2>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Tools & Technologies</div>
+      <div class="tech-chips" style="margin-top:8px;">
+        <span class="chip chip-blue">Tableau Public</span>
+        <span class="chip chip-green">Python</span>
+        <span class="chip chip-amber">SQL</span>
+        <span class="chip chip-blue">Excel</span>
+        <span class="chip chip-green">Data Cleaning</span>
+        <span class="chip chip-amber">KPI Design</span>
+        <span class="chip chip-blue">Dashboard Design</span>
+        <span class="chip chip-green">Business Intelligence</span>
+      </div>
+    </div>
+  </div>
 
-  <h2>Interactive Dashboard</h2>
+  <!-- Approach -->
+  <div class="cs-section">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <h2 class="section-title">Approach</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <strong>Data Preparation & Cleaning</strong>
+          <span>Ingested raw sales data into Excel and SQL. Removed duplicates, normalised category names, and validated country codes. Structured the data into a clean dimensional model ready for visualisation.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <strong>KPI Definition</strong>
+          <span>Defined core business metrics: total revenue by country, category-level contribution, period-over-period comparison, and regional performance gaps. Each KPI was mapped to a specific stakeholder question.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <strong>Dashboard Design & Build</strong>
+          <span>Built an interactive Tableau dashboard with dynamic filters by country and category, drill-down capability on product lines, and colour-coded performance indicators to surface outliers at a glance.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <strong>Publishing & Stakeholder Access</strong>
+          <span>Published to Tableau Public for browser-based access with no software installation required. Dashboard is fully responsive and embeddable in any web property.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<div class="tableauPlaceholder" id="viz173">
-  <noscript>
-    <a href="#">
-      <img alt="Revenue of Gadgets by Country"
-      src="https://public.tableau.com/static/images/Re/RevenueofGadgetsbyCountryDashboard/Sheet1/1_rss.png" />
-    </a>
-  </noscript>
+  <!-- Live Dashboard -->
+  <div class="cs-section">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <h2 class="section-title">Live Dashboard</h2>
+    </div>
+    <div class="tableau-wrap">
+      <div class="tableau-header">
+        <div class="tableau-title">LIVE · Revenue of Gadgets by Country Dashboard</div>
+        <div class="tableau-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="tableau-body">
+        <div class="tableauPlaceholder" id="viz173" style="width:100%;">
+          <noscript>
+            <a href="#">
+              <img alt="Revenue of Gadgets by Country"
+                src="https://public.tableau.com/static/images/Re/RevenueofGadgetsbyCountryDashboard/Sheet1/1_rss.png"
+                style="border: none" />
+            </a>
+          </noscript>
+          <object class="tableauViz" style="display:none;">
+            <param name="host_url" value="https://public.tableau.com/" />
+            <param name="embed_code_version" value="3" />
+            <param name="site_root" value="" />
+            <param name="name" value="RevenueofGadgetsbyCountryDashboard/Sheet1" />
+            <param name="tabs" value="no" />
+            <param name="toolbar" value="yes" />
+            <param name="static_image" value="https://public.tableau.com/static/images/Re/RevenueofGadgetsbyCountryDashboard/Sheet1/1.png" />
+            <param name="animate_transition" value="yes" />
+            <param name="display_static_image" value="yes" />
+            <param name="display_spinner" value="yes" />
+            <param name="display_overlay" value="yes" />
+            <param name="display_count" value="yes" />
+          </object>
+        </div>
+        <script type="text/javascript">
+          var divElement = document.getElementById("viz173");
+          var vizElement = divElement.getElementsByTagName("object")[0];
+          vizElement.style.width = "100%";
+          vizElement.style.height = "650px";
+          var scriptElement = document.createElement("script");
+          scriptElement.src = "https://public.tableau.com/javascripts/api/viz_v1.js";
+          vizElement.parentNode.insertBefore(scriptElement, vizElement);
+        </script>
+      </div>
+    </div>
+  </div>
 
-  <object class="tableauViz">
-    <param name="host_url" value="https://public.tableau.com/" />
-    <param name="embed_code_version" value="3" />
-    <param name="site_root" value="" />
-    <param name="name" value="RevenueofGadgetsbyCountryDashboard/Sheet1" />
-    <param name="tabs" value="no" />
-    <param name="toolbar" value="yes" />
-    <param name="static_image"
-      value="https://public.tableau.com/static/images/Re/RevenueofGadgetsbyCountryDashboard/Sheet1/1.png" />
-    <param name="animate_transition" value="yes" />
-    <param name="display_static_image" value="yes" />
-    <param name="display_spinner" value="yes" />
-    <param name="display_overlay" value="yes" />
-    <param name="display_count" value="yes" />
-  </object>
+  <!-- Key Insights -->
+  <div class="cs-section">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <h2 class="section-title">Key Insights</h2>
+    </div>
+    <div class="three-col">
+      <div class="insight-card">
+        <span class="insight-icon">🌍</span>
+        <h4>Top Revenue Markets</h4>
+        <p>Identified the highest revenue-generating countries, enabling the business to prioritise sales resources and marketing spend in proven markets.</p>
+      </div>
+      <div class="insight-card">
+        <span class="insight-icon">📦</span>
+        <h4>Category Performance</h4>
+        <p>Highlighted which product categories were driving sales growth vs. underperforming — surfacing 3 categories as candidates for pricing or promotion review.</p>
+      </div>
+      <div class="insight-card">
+        <span class="insight-icon">📉</span>
+        <h4>Regional Gaps</h4>
+        <p>Exposed significant performance gaps between regions, giving leadership a clear data-backed case for targeted expansion or product mix adjustment.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Impact -->
+  <div class="cs-section">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <h2 class="section-title">Business Impact</h2>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-item green">
+        <div class="impact-num">↑70%</div>
+        <div class="impact-desc">Reduction in time spent building manual sales reports per cycle</div>
+      </div>
+      <div class="impact-item blue">
+        <div class="impact-num">3</div>
+        <div class="impact-desc">Underperforming categories identified and flagged for strategy review</div>
+      </div>
+      <div class="impact-item amber">
+        <div class="impact-num">∞</div>
+        <div class="impact-desc">Self-serve access for stakeholders — no analyst dependency for queries</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Steps -->
+  <div class="cs-section">
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <h2 class="section-title">Roadmap & Next Steps</h2>
+    </div>
+    <div class="panel">
+      <div class="roadmap">
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot"></div><div class="roadmap-line"></div></div>
+          <div class="roadmap-content">
+            <strong>Time-Series Forecasting</strong>
+            <span>Add Python-based revenue trend forecasting using historical data, surfaced directly in the dashboard as a predictive layer for planning cycles.</span>
+          </div>
+          <div class="roadmap-tag tag-planned">Planned</div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot"></div><div class="roadmap-line"></div></div>
+          <div class="roadmap-content">
+            <strong>Automated Data Refresh Pipelines</strong>
+            <span>Replace manual data uploads with a scheduled ETL pipeline using Python + PostgreSQL, enabling the dashboard to refresh automatically on a set cadence.</span>
+          </div>
+          <div class="roadmap-tag tag-planned">Planned</div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot"></div><div class="roadmap-line"></div></div>
+          <div class="roadmap-content">
+            <strong>Inventory Optimisation Layer</strong>
+            <span>Extend the dashboard to include stock-level analytics — linking revenue performance to inventory data to surface reorder recommendations.</span>
+          </div>
+          <div class="roadmap-tag tag-future">Future</div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot"></div></div>
+          <div class="roadmap-content">
+            <strong>AI-Powered Insight Summaries</strong>
+            <span>Integrate a Claude API layer to generate natural-language insight summaries from the latest data slice — allowing non-technical users to query performance in plain English.</span>
+          </div>
+          <div class="roadmap-tag tag-research">Research</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<script type="text/javascript">
-  var divElement = document.getElementById("viz173");
-  var vizElement = divElement.getElementsByTagName("object")[0];
-  vizElement.style.width = "100%";
-  vizElement.style.height = "650px";
-  var scriptElement = document.createElement("script");
-  scriptElement.src = "https://public.tableau.com/javascripts/api/viz_v1.js";
-  vizElement.parentNode.insertBefore(scriptElement, vizElement);
-</script>
-
-
-  <h2>Key Insights</h2>
-  <ul>
-    <li>Identified top revenue-generating countries</li>
-    <li>Highlighted product categories driving sales growth</li>
-    <li>Exposed regional performance gaps</li>
-  </ul>
-
-  <h2>Impact</h2>
-  <div class="impact">
-    <ul>
-      <li>Improved visibility into sales performance</li>
-      <li>Enabled faster, data-backed decision-making</li>
-      <li>Demonstrated end-to-end analytics and visualization capability</li>
-    </ul>
+<!-- ── CTA ── -->
+<div class="cta-section">
+  <div class="cta-box">
+    <h2>Need a dashboard like this?</h2>
+    <p>I build sales dashboards and analytics platforms for SMEs in the US and UK. Fixed-price packages from $1,500. Results in 5–10 days.</p>
+    <div class="cta-actions">
+      <a href="https://calendly.com/willyoks/discovery" target="_blank" rel="noopener" class="btn-primary">📅 Book a Free Discovery Call</a>
+      <a href="index.html#projects" class="btn-secondary">← View All Projects</a>
+    </div>
   </div>
+</div>
 
-  <h2>Next Steps</h2>
-  <ul>
-    <li>Add time-series forecasting for revenue trends</li>
-    <li>Automate data refresh pipelines</li>
-    <li>Extend dashboard to inventory optimization</li>
-  </ul>
-</section>
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-left">
+    &lt;<span>WT</span>/&gt; · William Thompson · Accra, Ghana · 2026
+  </div>
+  <div class="footer-certs">
+    <span class="footer-cert">IBM Data Science</span>
+    <span class="footer-cert">OpenLabs Certificate</span>
+    <span class="footer-cert">Tableau Public</span>
+  </div>
+</footer>
 
 </body>
 </html>

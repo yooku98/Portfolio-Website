@@ -85,6 +85,166 @@
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'Sora', sans-serif; background: var(--primary); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+    /* ============ OPENING ANIMATION (Analytics Boot Sequence) ============ */
+    body.preloading { overflow: hidden; height: 100vh; }
+    #preloader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: radial-gradient(ellipse at center, #1E293B 0%, #0F172A 70%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 32px; transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #preloader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+    .pre-terminal {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      width: min(520px, 88vw);
+      box-shadow: 0 20px 60px rgba(59,130,246,0.25), inset 0 0 0 1px rgba(59,130,246,0.08);
+      font-size: 13px; color: var(--text-dim);
+      position: relative;
+    }
+    .pre-terminal::before {
+      content: '● ● ●'; position: absolute; top: 8px; left: 14px;
+      letter-spacing: 4px; color: #475569; font-size: 10px;
+    }
+    .pre-terminal-body { margin-top: 18px; min-height: 110px; }
+    .pre-line { opacity: 0; }
+    .pre-line.show { opacity: 1; animation: typeIn 0.4s ease-out; }
+    .pre-line .ok { color: var(--success); }
+    .pre-line .accent { color: var(--accent); }
+    .pre-cursor {
+      display: inline-block; width: 8px; height: 14px;
+      background: var(--accent); vertical-align: -2px; margin-left: 2px;
+      animation: blink 0.9s steps(2) infinite;
+    }
+    @keyframes typeIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .pre-chart {
+      display: flex; align-items: flex-end; gap: 10px;
+      height: 80px; padding: 0 6px;
+    }
+    .pre-bar {
+      width: 22px; background: linear-gradient(to top, var(--accent), #8B5CF6);
+      border-radius: 4px 4px 0 0;
+      height: 0; transform-origin: bottom;
+      animation: barGrow 0.9s cubic-bezier(.2,.9,.3,1.4) forwards;
+      box-shadow: 0 0 12px rgba(59,130,246,0.4);
+    }
+    @keyframes barGrow { to { height: var(--h, 60%); } }
+    .pre-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      color: var(--accent); letter-spacing: 2px; text-transform: uppercase;
+      opacity: 0; animation: fadeUp 0.6s ease-out 2.2s forwards;
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 0.85; transform: translateY(0); } }
+
+    /* ============ SCROLL REVEAL ============ */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.7,.3,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .reveal-stagger > * { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal-stagger.in > * { opacity: 1; transform: translateY(0); }
+    .reveal-stagger.in > *:nth-child(1) { transition-delay: .05s; }
+    .reveal-stagger.in > *:nth-child(2) { transition-delay: .15s; }
+    .reveal-stagger.in > *:nth-child(3) { transition-delay: .25s; }
+    .reveal-stagger.in > *:nth-child(4) { transition-delay: .35s; }
+    .reveal-stagger.in > *:nth-child(5) { transition-delay: .45s; }
+    .reveal-stagger.in > *:nth-child(6) { transition-delay: .55s; }
+
+    /* ============ QUIRKY MICRO-INTERACTIONS ============ */
+    /* Logo glitch on hover */
+    .logo { cursor: pointer; position: relative; }
+    .logo:hover { animation: glitch 0.4s steps(2) 2; }
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 var(--accent), -2px 0 #ec4899; transform: translate(0); }
+      25% { text-shadow: -2px 0 var(--accent), 2px 0 #ec4899; transform: translate(1px, -1px); }
+      50% { text-shadow: 2px 1px #10B981, -1px -1px var(--accent); transform: translate(-1px, 1px); }
+      100% { text-shadow: none; transform: translate(0); }
+    }
+
+    /* Skill icon wiggle on card hover */
+    .skill-card:hover .skill-icon { animation: wiggle 0.6s ease; }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0) scale(1); }
+      20% { transform: rotate(-12deg) scale(1.15); }
+      40% { transform: rotate(10deg) scale(1.15); }
+      60% { transform: rotate(-6deg) scale(1.1); }
+      80% { transform: rotate(4deg) scale(1.05); }
+    }
+
+    /* Project header emoji bouncy float */
+    .project-header { transition: transform 0.4s ease; }
+    .project-card:hover .project-header { transform: scale(1.04); }
+    .project-header { animation: floatY 4s ease-in-out infinite; }
+    .project-card:nth-child(2n) .project-header { animation-delay: -1.5s; }
+    .project-card:nth-child(3n) .project-header { animation-delay: -2.8s; }
+    @keyframes floatY {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Magnetic primary CTA */
+    .btn-primary { position: relative; overflow: hidden; }
+    .btn-primary::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 0; height: 0; background: rgba(255,255,255,0.25);
+      border-radius: 50%; transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease;
+    }
+    .btn-primary:hover::after { width: 320px; height: 320px; }
+
+    /* Animated background grid in hero */
+    .hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.06) 1px, transparent 1px);
+      background-size: 50px 50px;
+      mask-image: radial-gradient(ellipse at 70% 40%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse at 70% 40%, black 20%, transparent 70%);
+      animation: gridShift 20s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes gridShift { to { background-position: 50px 50px; } }
+
+    /* Stat counter pop */
+    .stat-card { transition: all 0.3s ease, transform 0.4s cubic-bezier(.2,.9,.3,1.4); }
+    .stat-number { display: inline-block; }
+    .stat-card:hover .stat-number { animation: pop 0.5s ease; }
+    @keyframes pop { 50% { transform: scale(1.18) rotate(-3deg); color: #8B5CF6; } }
+
+    /* Section tag typewriter underline */
+    .section-tag { position: relative; }
+    .section-tag::after {
+      content: ''; position: absolute; left: 16px; right: 16px; bottom: 2px;
+      height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left;
+      transition: transform 0.6s ease;
+    }
+    .reveal.in .section-tag::after { transform: scaleX(1); }
+
+    /* FAQ hover slide */
+    .faq-item { transition: padding-left 0.3s ease, background 0.3s ease; border-radius: 6px; padding-left: 0; }
+    .faq-item:hover { padding-left: 16px; background: rgba(59,130,246,0.04); }
+
+    /* Tech tag bounce-in on card hover */
+    .project-card:hover .tech-tag { animation: tagPulse 0.5s ease; }
+    .project-card:hover .tech-tag:nth-child(2) { animation-delay: 0.05s; }
+    .project-card:hover .tech-tag:nth-child(3) { animation-delay: 0.1s; }
+    .project-card:hover .tech-tag:nth-child(4) { animation-delay: 0.15s; }
+    .project-card:hover .tech-tag:nth-child(5) { animation-delay: 0.2s; }
+    @keyframes tagPulse { 50% { transform: translateY(-3px); background: rgba(139,92,246,0.2); border-color: #8B5CF6; color: #c4b5fd; } }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      #preloader { display: none !important; }
+      body.preloading { overflow: auto; height: auto; }
+      .reveal, .reveal-stagger > * { opacity: 1 !important; transform: none !important; }
+    }
+
     ::-webkit-scrollbar { width: 10px; }
     ::-webkit-scrollbar-track { background: var(--primary); }
     ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
@@ -205,6 +365,30 @@
 </head>
 <body>
 
+  <!-- ============ OPENING ANIMATION ============ -->
+  <div id="preloader" aria-hidden="true">
+    <div class="pre-chart" aria-hidden="true">
+      <div class="pre-bar" style="--h:35%; animation-delay:.05s"></div>
+      <div class="pre-bar" style="--h:60%; animation-delay:.15s"></div>
+      <div class="pre-bar" style="--h:45%; animation-delay:.25s"></div>
+      <div class="pre-bar" style="--h:78%; animation-delay:.35s"></div>
+      <div class="pre-bar" style="--h:55%; animation-delay:.45s"></div>
+      <div class="pre-bar" style="--h:92%; animation-delay:.55s"></div>
+      <div class="pre-bar" style="--h:70%; animation-delay:.65s"></div>
+      <div class="pre-bar" style="--h:100%; animation-delay:.75s"></div>
+    </div>
+    <div class="pre-terminal">
+      <div class="pre-terminal-body" id="preTerminal">
+        <div class="pre-line" data-line="1">$ <span class="accent">init</span> portfolio.dashboard</div>
+        <div class="pre-line" data-line="2">→ loading datasets ............ <span class="ok">[ok]</span></div>
+        <div class="pre-line" data-line="3">→ rendering visualisations ... <span class="ok">[ok]</span></div>
+        <div class="pre-line" data-line="4">→ deploying experience ....... <span class="ok">[ok]</span></div>
+        <div class="pre-line" data-line="5">$ <span class="accent">welcome</span><span class="pre-cursor"></span></div>
+      </div>
+    </div>
+    <div class="pre-label">Building insight · 100%</div>
+  </div>
+
   <nav aria-label="Main navigation">
     <div class="nav-container">
       <div class="logo">&lt;WT/&gt;</div>
@@ -254,12 +438,12 @@
     </section>
 
     <section class="section" id="skills" aria-labelledby="skills-heading">
-      <div class="section-header">
+      <div class="section-header reveal">
         <div class="section-tag">// EXPERTISE</div>
         <h2 class="section-title" id="skills-heading">Core Skills &amp; Tools</h2>
         <p class="section-description">A comprehensive toolkit built around one goal: turning messy business data into clean, actionable dashboards that save SMEs time and money.</p>
       </div>
-      <div class="skills-grid">
+      <div class="skills-grid reveal-stagger">
         <article class="skill-card"><span class="skill-icon" aria-hidden="true">📊</span><h3>Data Analytics</h3><p class="skill-items">Python · SQL · Excel · Pandas · Data Cleaning · Exploratory Data Analysis (EDA) · Statistical Analysis</p></article>
         <article class="skill-card"><span class="skill-icon" aria-hidden="true">🤖</span><h3>Machine Learning</h3><p class="skill-items">Regression · Classification · Model Evaluation · Feature Engineering · Scikit-learn</p></article>
         <article class="skill-card"><span class="skill-icon" aria-hidden="true">📈</span><h3>Data Visualisation</h3><p class="skill-items">Tableau · Power BI · Matplotlib · Seaborn · Dashboard Design · Business Intelligence</p></article>
@@ -270,12 +454,12 @@
     </section>
 
     <section class="section" id="projects" aria-labelledby="projects-heading">
-      <div class="section-header">
+      <div class="section-header reveal">
         <div class="section-tag">// PORTFOLIO</div>
         <h2 class="section-title" id="projects-heading">Featured Projects</h2>
         <p class="section-description">SME analytics platforms, sales dashboards, and full-stack data applications — built for real businesses with measurable outcomes.</p>
       </div>
-      <div class="projects-grid">
+      <div class="projects-grid reveal-stagger">
 
         <article class="project-card">
           <div class="project-header" aria-hidden="true">🌙</div>
@@ -359,7 +543,7 @@
     </section>
 
     <section class="section" id="experience" aria-labelledby="experience-heading">
-      <div class="section-header">
+      <div class="section-header reveal">
         <div class="section-tag">// BACKGROUND</div>
         <h2 class="section-title" id="experience-heading">Work Experience</h2>
         <p class="section-description">Professional journey combining data analytics and web development in Ghana</p>
@@ -388,12 +572,12 @@
     </section>
 
     <section class="section" id="testimonials" aria-labelledby="testimonials-heading">
-      <div class="section-header">
+      <div class="section-header reveal">
         <div class="section-tag">// CLIENT FEEDBACK</div>
         <h2 class="section-title" id="testimonials-heading">What Clients Say</h2>
         <p class="section-description">Feedback from businesses and individuals I have worked with in Ghana and beyond</p>
       </div>
-      <div class="testimonials-grid">
+      <div class="testimonials-grid reveal-stagger">
         <article class="testimonial-card">
           <p class="testimonial-quote">William built our restaurant website and handled the full SEO setup. Within weeks we started getting calls from customers who found us on Google. Excellent work and very professional.</p>
           <div class="testimonial-author">Catfish Supreme</div>
@@ -408,7 +592,7 @@
     </section>
 
     <section class="section" id="faq" aria-labelledby="faq-heading">
-      <div class="section-header">
+      <div class="section-header reveal">
         <div class="section-tag">// FAQ</div>
         <h2 class="section-title" id="faq-heading">Frequently Asked Questions</h2>
         <p class="section-description">Common questions about working with me</p>
@@ -478,6 +662,76 @@
       link.addEventListener('click', () => {
         document.getElementById('navLinks').classList.remove('active');
       });
+    });
+
+    /* ============ OPENING ANIMATION SEQUENCE ============ */
+    document.body.classList.add('preloading');
+    const preLines = document.querySelectorAll('#preTerminal .pre-line');
+    preLines.forEach((line, i) => {
+      setTimeout(() => line.classList.add('show'), 250 + i * 320);
+    });
+    window.addEventListener('load', () => {
+      const minDelay = 2200;
+      setTimeout(() => {
+        const pre = document.getElementById('preloader');
+        pre.classList.add('done');
+        document.body.classList.remove('preloading');
+        // trigger hero reveal cascade
+        setTimeout(() => pre.remove(), 900);
+        animateStats();
+      }, minDelay);
+    });
+
+    /* ============ SCROLL REVEAL ============ */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+
+    /* ============ STAT COUNTER ANIMATION ============ */
+    function animateStats() {
+      document.querySelectorAll('.stat-number').forEach(el => {
+        const text = el.textContent.trim();
+        const match = text.match(/^(\d+)(.*)$/);
+        if (!match) return;
+        const target = parseInt(match[1], 10);
+        const suffix = match[2];
+        let current = 0;
+        const step = Math.max(1, Math.ceil(target / 30));
+        const tick = () => {
+          current = Math.min(target, current + step);
+          el.textContent = current + suffix;
+          if (current < target) requestAnimationFrame(tick);
+        };
+        tick();
+      });
+    }
+
+    /* ============ MAGNETIC CTA BUTTONS ============ */
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const r = btn.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width / 2;
+        const y = e.clientY - r.top - r.height / 2;
+        btn.style.transform = `translate(${x * 0.18}px, ${y * 0.25}px)`;
+      });
+      btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+    });
+
+    /* ============ TILT ON PROJECT CARDS ============ */
+    document.querySelectorAll('.project-card, .skill-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `perspective(900px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) translateY(-6px)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = ''; });
     });
   </script>
 </body>

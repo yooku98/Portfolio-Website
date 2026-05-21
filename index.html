@@ -63,7 +63,7 @@
     "@type": "ItemList",
     "name": "William Thompson Featured Projects",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Moon Time — Women's Health Tracking App", "url": "https://moon-time.streamlit.app/" },
+      { "@type": "ListItem", "position": 1, "name": "Moon Time — Women's Health Tracking App", "url": "https://moontime-api.fly.dev/" },
       { "@type": "ListItem", "position": 2, "name": "Sales Analytics Dashboard (Tableau)", "url": "https://yooku98.github.io/Portfolio-Website/gadget-sales.html" },
       { "@type": "ListItem", "position": 3, "name": "Stack Overflow Developer Survey Analysis", "url": "https://yooku98.github.io/Portfolio-Website/#projects" },
       { "@type": "ListItem", "position": 4, "name": "Restaurant Website - Catfish Supreme", "url": "https://catfish-supreme.vercel.app/" },
@@ -216,8 +216,14 @@
       60% { transform: rotate(-6deg) scale(1.1); }
       80% { transform: rotate(4deg) scale(1.05); }
     }
-    .project-header { transition: transform 0.5s ease; }
-    .project-card:hover .project-header { transform: scale(1.08); }
+    .project-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: 1;
+      transition: transform 0.7s cubic-bezier(.2,.7,.3,1), filter 0.5s ease;
+      filter: brightness(0.78) saturate(1.05);
+    }
+    .project-emoji { position: relative; z-index: 0; }
+    .project-card:hover .project-img { transform: scale(1.12); filter: brightness(1) saturate(1.2); }
 
     .btn-primary { position: relative; overflow: hidden; }
     .btn-primary::after {
@@ -433,16 +439,23 @@
     }
     .project-card:hover { border-color: var(--accent); box-shadow: 0 15px 50px rgba(59,130,246,0.2); }
     .project-header {
-      height: 180px;
+      height: 200px;
       background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
       display: flex; align-items: center; justify-content: center;
       font-size: 64px; position: relative; overflow: hidden;
     }
     .project-header::before {
-      content: ''; position: absolute; width: 100%; height: 100%;
-      background: linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.06) 50%,transparent 70%);
+      content: ''; position: absolute; inset: 0; z-index: 3;
+      background: linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.08) 50%,transparent 70%);
       animation: shimmer 3s ease-in-out infinite;
+      pointer-events: none;
     }
+    .project-header::after {
+      content: ''; position: absolute; inset: 0; z-index: 2;
+      background: linear-gradient(180deg, rgba(15,23,42,0.1) 0%, rgba(15,23,42,0.65) 100%);
+      pointer-events: none; transition: opacity 0.4s ease;
+    }
+    .project-card:hover .project-header::after { opacity: 0.55; }
     @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
     .project-content { padding: 28px; }
     .project-type { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--accent); background: rgba(59,130,246,0.1); padding: 4px 12px; border-radius: 50px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -819,20 +832,26 @@
       <div class="projects-grid reveal-alt">
 
         <article class="project-card">
-          <div class="project-header" aria-hidden="true">🌙</div>
+          <div class="project-header" aria-hidden="true">
+            <img class="project-img" src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop&h=420" alt="" loading="lazy" onerror="this.remove()">
+            <span class="project-emoji">🌙</span>
+          </div>
           <div class="project-content">
             <span class="project-type">Full-Stack · AI</span>
             <h3>Moon Time — Women's Health Tracking App</h3>
-            <p>Streamlit-based health tracking app with SQLite storage, bcrypt authentication, and an AI chatbot (Luna) powered by the Anthropic API. Features an interactive cycle calendar, comparison charts, and multilingual support across English, Twi, Hausa, and French. <strong>Built for accessibility across West African languages with a fully conversational AI health assistant.</strong></p>
+            <p>Full-stack health tracking app — FastAPI backend with Turso (distributed SQLite) storage, bcrypt authentication, and an AI chatbot (Luna) powered by the Anthropic API, served through a React frontend. Features an interactive cycle calendar, comparison charts, and multilingual support across English, Twi, Hausa, and French. <strong>Migrated from Streamlit to a production-grade FastAPI + React stack on Fly.io for low-latency global access.</strong></p>
             <div class="project-tech">
-              <span class="tech-tag">Python</span><span class="tech-tag">Streamlit</span><span class="tech-tag">Claude API</span><span class="tech-tag">SQLite</span><span class="tech-tag">Multilingual</span>
+              <span class="tech-tag">FastAPI</span><span class="tech-tag">React</span><span class="tech-tag">Claude API</span><span class="tech-tag">Turso</span><span class="tech-tag">Fly.io</span><span class="tech-tag">Multilingual</span>
             </div>
-            <a href="https://moon-time.streamlit.app/" target="_blank" rel="noopener" class="project-link">View Live App →</a>
+            <a href="https://moontime-api.fly.dev/" target="_blank" rel="noopener" class="project-link">View Live App →</a>
           </div>
         </article>
 
         <article class="project-card">
-          <div class="project-header" aria-hidden="true">📊</div>
+          <div class="project-header" aria-hidden="true">
+            <img class="project-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&auto=format&fit=crop&h=420" alt="" loading="lazy" onerror="this.remove()">
+            <span class="project-emoji">📊</span>
+          </div>
           <div class="project-content">
             <span class="project-type">Business Intelligence</span>
             <h3>Sales Analytics Dashboard</h3>
@@ -845,7 +864,10 @@
         </article>
 
         <article class="project-card">
-          <div class="project-header" aria-hidden="true">💼</div>
+          <div class="project-header" aria-hidden="true">
+            <img class="project-img" src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80&auto=format&fit=crop&h=420" alt="" loading="lazy" onerror="this.remove()">
+            <span class="project-emoji">💼</span>
+          </div>
           <div class="project-content">
             <span class="project-type">Data Analysis</span>
             <h3>Stack Overflow Developer Survey Analysis</h3>
@@ -858,7 +880,10 @@
         </article>
 
         <article class="project-card">
-          <div class="project-header" aria-hidden="true">🌐</div>
+          <div class="project-header" aria-hidden="true">
+            <img class="project-img" src="https://images.unsplash.com/photo-1485921325833-c519f76c4927?w=800&q=80&auto=format&fit=crop&h=420" alt="" loading="lazy" onerror="this.remove()">
+            <span class="project-emoji">🌐</span>
+          </div>
           <div class="project-content">
             <span class="project-type">Web Design</span>
             <h3>Restaurant Website — Catfish Supreme</h3>
@@ -871,7 +896,10 @@
         </article>
 
         <article class="project-card">
-          <div class="project-header" aria-hidden="true">📈</div>
+          <div class="project-header" aria-hidden="true">
+            <img class="project-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80&auto=format&fit=crop&h=420" alt="" loading="lazy" onerror="this.remove()">
+            <span class="project-emoji">📈</span>
+          </div>
           <div class="project-content">
             <span class="project-type">Data Analytics · Dashboard</span>
             <h3>Sales Analytics Dashboard — Python Plotly Dash</h3>
@@ -884,7 +912,10 @@
         </article>
 
         <article class="project-card">
-          <div class="project-header" aria-hidden="true">🔧</div>
+          <div class="project-header" aria-hidden="true">
+            <img class="project-img" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80&auto=format&fit=crop&h=420" alt="" loading="lazy" onerror="this.remove()">
+            <span class="project-emoji">🔧</span>
+          </div>
           <div class="project-content">
             <span class="project-type">API Development</span>
             <h3>RESTful API with Rate Limiting</h3>
